@@ -27,7 +27,7 @@ is represented by an `EL.Expressions.Expression` object.
 with EL.Expressions;
    ...
 
-   E : EL.Expressions.Expression := Create_Expression ("1 + (2 - 3) * 4", Ctx);
+   E : EL.Expressions.Expression := EL.Expressions.Create_Expression ("1 + (2 - 3) * 4", Ctx);
 }}}
 
 When parsing an expression, the context is used to resolve the functions
@@ -51,7 +51,7 @@ with EL.Objects;
 To access the value, several `To_type` functions are provided.
 
 {{{
-   Ada.Text_IO.Put_Line ("Result: " & To_String (Result));
+   Ada.Text_IO.Put_Line ("Result: " & EL.Objects.To_String (Result));
 }}}
 
 == Source ==
