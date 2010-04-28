@@ -80,6 +80,54 @@ The `Bean` interface redefines the `Readonly_Bean` to define the `Set_Value` pro
 This interface should be implemented when the expression evaluator has to modify
 a value.
 
+= EL.Contexts =
+
+The expression language uses a context to give access to functions, variables
+and resolve access to values.  The `ELContext` interface represent such context
+and it gives access to:
+
+  * A function mapper that resolves function that the evaluator can invoke.
+  * A variable mapper that find the object associated with a name.
+  * A resolver that will resolve properties on objects.
+
+The function mapper is used only when parsing an expression.
+
+The variable mapper is used to find the variable object knowing its name.
+For example it will resolve the name `user` and return an instance of the
+`Readonly_Bean` interface (a `Person`).
+
+The resolver will resolve the variable to obtain the value from the property name.
+
+= EL.Functions =
+
+The `EL.Functions` package defines the `Function_Mapper` interface that allows to
+register functions for the expression parser.  The evaluator will invoke the
+functions directly (without the need of the `Function_Mapper`).
+
+A function can get from one to four arguments (this is pre-defined because Ada does
+not support variable argument lists easily).  Each argument is recieved as
+an `Object`.  The function must returns an `Object` value.  
+
+The function below returns the year part of a date.  The date is retrieved as
+an `Ada.Calendar.Time` and the result will be returned as an integer.
+{{{
+function Year (Val : EL.Objects.Object) return EL.Objects.Object is
+   Date : constant Ada.Calendar.Time := To_Time (Val);
+begin
+   return To_Object (Ada.Calendar.Formatting.Year (Date));
+end Format;
+}}}
+
+The function will be registered as follows:
+
+{{{
+   Fm  : constant EL.Functions.Function_Mapper_Access
+     := new EL.Functions.Default.Default_Function_Mapper;
+...
+   Fm.Set_Function ("year", Year'Access);
+}}}
+
+
 = Class Diagram =
 
 [http://ada-el.googlecode.com/svn/trunk/uml/Expression.png]
