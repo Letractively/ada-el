@@ -2,10 +2,12 @@
 
 = Introduction =
 
-The JSP and JSF Unified Expression Language is used to give access
+The JSP and [http://en.wikipedia.org/wiki/JavaServer_Faces JSF] Unified Expression Language is used to give access
 to Java bean components within a presentation page (JSP, XHTML).
 For JSF the expression language creates a bi-directional binding where
 the value can be obtained when displaying a page but also modified (after a POST).
+The unified expression language is described in [http://www.jcp.org/en/jsr/detail?id=245 JSR-245] (See also
+[http://java.sun.com/products/jsp/reference/techart/unifiedEL.html Unified EL]).
 
 Example of presentation page:
 {{{
