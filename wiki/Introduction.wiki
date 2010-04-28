@@ -30,6 +30,35 @@ bind an Ada record `Joe` to the name `user` and evaluate the above expression.
    Result := E.Get_Value (Ctx);
 }}}
 
+
+= EL.Objects.Object =
+
+Unlike Java, Ada does not provide a root data type to represent other types (the `java.lang.Object`).  This makes the adaptation of Ada EL more difficult because
+the expression language heavily relies on Java mechanisms (`Object` type and introspection).
+
+The `EL.Objects` package provides the data type `Object` that allows to manage
+entities of different types.  When an expression is evaluated, the result is
+returned in an `Object`.  The record holds the value itself as well as a basic
+type indicator (boolean, integer, float, string, wide wide string, ...).
+
+The `Object` is also used to provide variable values to the expression evaluator.
+
+To create an `Object` from a basic type, several `To_Object` functions are provided.
+
+{{{
+   Val : EL.Objects.Object := EL.Objects.Object.To_Object ("A string");
+}}}
+
+To get access to the value held by `Object`, several `To_`_type_ functions are
+provided:
+
+{{{
+  S : constant String := EL.Objects.Object.To_String (Val);
+}}}
+
+The `To_`_type_ function will try to convert the value to the target type.
+
+
 = Class Diagram =
 
 [http://ada-el.googlecode.com/svn/trunk/uml/Expression.png]
@@ -39,5 +68,3 @@ bind an Ada record `Joe` to the name `user` and evaluate the above expression.
 
 
 = EL.Contexts =
-
-= EL.Objects.Object =
