@@ -58,10 +58,12 @@ provided:
 
 The `To_`_type_ function will try to convert the value to the target type.
 
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-objects.ads)
+
 = EL.Beans =
 
 The `EL.Beans` package defines two interfaces that allow to plug an Ada tagged
-record to the expression evaluator. The `Readonly_Bean` interface defined a unique
+record to the expression evaluator. The `Readonly_Bean` interface defines a unique
 `Get_Value` function that must be implemented.  This function is called by
 the expression context resolver to find the value associated with a property.
 Basically, the Ada object will be defined as a variable and associated with
@@ -80,6 +82,8 @@ The `Bean` interface redefines the `Readonly_Bean` to define the `Set_Value` pro
 This interface should be implemented when the expression evaluator has to modify
 a value.
 
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-beans.ads)
+
 = EL.Contexts =
 
 The expression language uses a context to give access to functions, variables
@@ -97,6 +101,11 @@ For example it will resolve the name `user` and return an instance of the
 `Readonly_Bean` interface (a `Person`).
 
 The resolver will resolve the variable to obtain the value from the property name.
+
+The `EL.Contexts` package defines the `ELResolver` and `ELContext` interfaces.
+The `EL.Contexts.Default` package provides default implementation of these interfaces.
+
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-contexts.ads)
 
 = EL.Functions =
 
@@ -127,6 +136,8 @@ The function will be registered as follows:
    Fm.Set_Function ("year", Year'Access);
 }}}
 
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-functions.ads)
+
 == EL.Variables ==
 
 The `EL.Variables` package defines the `VariableMapper` interface and
@@ -140,6 +151,8 @@ be able to use any Java object).
 
    Ctx.Set_Variable ("user", Joe);
 }}}
+
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-variables.ads)
 
 == EL.Expressions ==
 
@@ -162,13 +175,8 @@ shared by several threads and evaluated at the same time.
   Val : EL.Objects.Object := E.Get_Value (Ctx);
 }}}
 
+(See http://code.google.com/p/ada-el/source/browse/trunk/src/el-expressions.ads)
 
 = Class Diagram =
 
 [http://ada-el.googlecode.com/svn/trunk/uml/Expression.png]
-
-
-= EL.Expressions =
-
-
-= EL.Contexts =
