@@ -9,8 +9,8 @@ Add your content here.
 
 The expression context defines the context for parsing and evaluating the expression.
 In short the expression context provides:
-* the definitions and access to functions,
-* the access to variables
+  * the definitions and access to functions,
+  * the access to variables
 
 The expression context is represented by the `EL.Contexts.Context` interface.
 
