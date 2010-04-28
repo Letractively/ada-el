@@ -58,6 +58,27 @@ provided:
 
 The `To_`_type_ function will try to convert the value to the target type.
 
+= EL.Beans =
+
+The `EL.Beans` package defines two interfaces that allow to plug an Ada tagged
+record to the expression evaluator. The `Readonly_Bean` interface defined a unique
+`Get_Value` function that must be implemented.  This function is called by
+the expression context resolver to find the value associated with a property.
+Basically, the Ada object will be defined as a variable and associated with
+a name (for example `user`).  The `Get_Value` function will be called with
+the property name and the value must be returned as an `Object` (for example `firstName`).
+
+For example:
+{{{
+   type Person is new EL.Beans.Readonly_Bean with private;
+
+   --  Get the value identified by the name.
+   function Get_Value (From : Person; Name : String) return EL.Objects.Object;
+}}}
+
+The `Bean` interface redefines the `Readonly_Bean` to define the `Set_Value` procedure.
+This interface should be implemented when the expression evaluator has to modify
+a value.
 
 = Class Diagram =
 
