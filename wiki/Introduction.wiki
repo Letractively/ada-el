@@ -127,6 +127,41 @@ The function will be registered as follows:
    Fm.Set_Function ("year", Year'Access);
 }}}
 
+== EL.Variables ==
+
+The `EL.Variables` package defines the `VariableMapper` interface and
+the `EL.Variables.Default` package provides a default implementation.
+The `VariableMapper` allows to bind a name to an Ada object that implements
+the `EL.Beans.Readonly_Bean` or `EL.Beans.Bean` interfaces (in Java, one would
+be able to use any Java object).
+
+{{{
+   Joe  : constant Person_Access := Create_Person ("Joe", "Smith", 12);
+
+   Ctx.Set_Variable ("user", Joe);
+}}}
+
+== EL.Expressions ==
+
+The `EL.Expressions` package is the main package to parse and evaluate expressions.
+An expression string is parsed using the `Create_Expression` function which
+returns an `Expression` record.  The expression is parsed only once and it
+can be evaluated several times.  The expression context is used only to get
+access to the function mapper.
+
+{{{
+   E : EL.Expressions.Expression := Create_Expression ("${user.firstName}", Ctx);
+}}}
+
+The expression is evaluated using the `Get_Value` function.  The evaluation is made
+on the expression context which gives access to the variables and the resolver.
+The expression context should be a per-thread object.  The expression can be
+shared by several threads and evaluated at the same time.
+
+{{{
+  Val : EL.Objects.Object := E.Get_Value (Ctx);
+}}}
+
 
 = Class Diagram =
 
