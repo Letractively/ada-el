@@ -57,4 +57,5 @@ To access the value, several `To_type` functions are provided.
 == Source ==
 
 [http://code.google.com/p/ada-el/source/browse/trunk/samples/evaluate.adb]
-[http://blog.vacs.fr/index.php?post/2010/04/28/Ada-EL-The-JSR-245-Unified-Expression-Language-for-Ada]
+
+[http://blog.vacs.fr/index.php?post/2010/04/28/Ada-EL-The-JSR-245-Unified-Expression-Language-for-Ada Ada EL The JSR 245 Unified Expression Language for Ada]
