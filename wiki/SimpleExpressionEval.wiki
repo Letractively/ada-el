@@ -27,7 +27,7 @@ is represented by an `EL.Expressions.Expression` object.
 with EL.Expressions;
    ...
 
-   E : EL.Expressions.Expression := EL.Expressions.Create_Expression ("1 + (2 - 3) * 4", Ctx);
+   E : EL.Expressions.Expression := EL.Expressions.Create_Expression ("#{1 + (2 - 3) * 4}", Ctx);
 }}}
 
 When parsing an expression, the context is used to resolve the functions
