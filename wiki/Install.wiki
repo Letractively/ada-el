@@ -1,0 +1,29 @@
+#summary Ada EL Installation
+
+= Build =
+
+Build with the following commands:
+
+{{{
+   ./configure
+   make
+}}}
+
+The samples can be built using:
+{{{
+   gnatmake -Psamples
+}}}
+
+= Tests =
+
+The unit tests are implemented using [http://libre.adacore.com/libre/tools/aunit/ AUnit].
+The unit tests are built using:
+{{{
+   gnatmake -Ptests
+}}}
+
+And unit tests are executed with:
+
+{{{
+   bin/el_harness
+}}}
