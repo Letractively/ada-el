@@ -1,5 +1,12 @@
 #summary Ada EL Installation
 
+= Requirements =
+
+You will need:
+
+  * [http://gcc.gnu.org Gcc 4.4] or [http://libre.adacore.com/libre/download/ GNAT GPL 2010]
+  * [http://code.google.com/p/ada-util Ada Util 1.1]
+
 = Build =
 
 Build with the following commands:
