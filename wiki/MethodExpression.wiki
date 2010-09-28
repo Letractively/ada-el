@@ -46,10 +46,12 @@ The method binding is a small static and read-only descriptor that describes
 the method that can be invoke on the bean.  The binding defines a method proxy
 which performs some necessary conversion to the target bean type.
 
+Let's say the method to invoke on the `Person` bean is the following:
 {{{
 function Print (P : in Person; Title : in String) return String;
 }}}
 
+The method binding is created by instantiating the `Func_String` package:
 {{{
 with EL.Beans.Methods.Func_String;
 
@@ -60,8 +62,11 @@ package Print_Binding is
                         Name   => "print");
 }}}
 
+The package will implement a small proxy function and will provide the method
+binding descriptor.
 
-= Create the Method Expression
+
+= Create the Method Expression =
 
 
 {{{
