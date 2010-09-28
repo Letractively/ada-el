@@ -1,0 +1,38 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Add your content here.
+
+= Bean Declaration =
+
+The bean type must implement the `Method_Bean` interface.
+
+{{{
+with EL.Beans;
+with EL.Beans.Methods;
+...
+type Person is new EL.Beans.Bean and EL.Beans.Methods.Method_Bean with private;
+...
+overriding
+function Get_Method_Bindings (From : in Person)
+                              return EL.Beans.Methods.Method_Binding_Array_Access;
+}}}
+
+
+
+= Create the Method Expression
+
+
+{{{
+Method : EL.Expressions.Method_Expression;
+..
+Method := EL.Expressions.Create_Expression ("#{user.print}", Ctx);
+}}}
+
+=  =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
