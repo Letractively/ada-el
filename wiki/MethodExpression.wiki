@@ -126,5 +126,7 @@ as argument.
 == Source ==
 
 [http://code.google.com/p/ada-el/source/browse/trunk/samples/method.adb]
+
 [http://code.google.com/p/ada-el/source/browse/trunk/samples/bean.ads]
+
 [http://code.google.com/p/ada-el/source/browse/trunk/samples/bean.adb]
