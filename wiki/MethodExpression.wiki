@@ -1,8 +1,18 @@
-#summary One-sentence summary of this page.
+#summary Method Expression
 
 = Introduction =
 
-Add your content here.
+A method expression represents a method to be executed on an object.
+The valid syntax for the method expression is a subset of the EL expression.
+Method expressions are used in JSF to bind an action or an event to an object method.
+
+For example:
+{{{
+"#{user.print}"
+}}}
+
+defines a method expression that allows to invoke a `print` operation on the
+`user` bean.
 
 = Bean Declaration =
 
