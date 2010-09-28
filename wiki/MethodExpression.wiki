@@ -71,7 +71,7 @@ package Print_Binding is
 The package will implement a small proxy function and will provide the method
 binding descriptor (`Print_Binding.Proxy`.
 
-= Implementing the Method*_Bean interface =
+= Implementing the `Method_Bean` interface =
 
 The `Get_Method_Bindings` function must be implemented.  Basically it must
 return a read-only access to an array of method bindings.  The array can be
