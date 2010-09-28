@@ -91,18 +91,33 @@ begin
 end Get_Method_Bindings;
 }}}
 
+When a new method is added, the new method binding access must be added
+to the array.
+
 = Create the Method Expression =
 
+The method expression is created by the `Create_Expression` function
+which parses the string and returns the `Method_Expression` object.
+This object can be shared by several tasks.
 
 {{{
-Method : EL.Expressions.Method_Expression;
-..
-Method := EL.Expressions.Create_Expression ("#{user.print}", Ctx);
+with EL.Expressions;
+...
+Ctx    : EL.Contexts.Context'Class := ...;
+Method : EL.Expressions.Method_Expression
+   := EL.Expressions.Create_Expression ("#{user.print}", Ctx);
 }}}
 
-=  =
+To invoke the method, we have to use the `Execute` function
+provided by the `Func_String` package.  
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+S : String := Func_String.Execute (Method, "Title", Ctx);
+}}}
+
+The `Execute` function will evaluate the method expression to find
+the object and the method.  If the object does not implement
+the `print` method, or, if that method does not match our signature,
+an `Invalid_Method` exception will be raised.  Otherwise, the
+method will be executed with the bean as parameter and the string
+as argument.
