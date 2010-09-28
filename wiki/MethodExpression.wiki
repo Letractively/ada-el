@@ -121,3 +121,8 @@ the `print` method, or, if that method does not match our signature,
 an `Invalid_Method` exception will be raised.  Otherwise, the
 method will be executed with the bean as parameter and the string
 as argument.
+
+
+== Source ==
+
+[http://code.google.com/p/ada-el/source/browse/trunk/samples/method.adb]
