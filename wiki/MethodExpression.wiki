@@ -12,7 +12,13 @@ For example:
 }}}
 
 defines a method expression that allows to invoke a `print` operation on the
-`user` bean.
+`user` bean.  In JSF pages, the following code will be used used to indicate that
+this `print` method must be executed when the user validates some `Print` button.
+
+{{{
+<t:commandButton value="Print"
+                 action="#{user.print}"/>
+}}}
 
 To be able to invoke such operation, some preparation is necessary on the bean
 (the Java EL implementation can leverage the use of introspection to find the
