@@ -35,14 +35,14 @@ which has to return a list of methods that can be invoked in the bean.
 (Again, Java does this through introspection).
 
 {{{
-with EL.Beans;
-with EL.Beans.Methods;
+with Util.Beans.Basic;
+with Util.Beans.Methods;
 ...
-type Person is new EL.Beans.Bean and EL.Beans.Methods.Method_Bean with private;
+type Person is new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with private;
 ...
 overriding
 function Get_Method_Bindings (From : in Person)
-                              return EL.Beans.Methods.Method_Binding_Array_Access;
+                              return Util.Beans.Methods.Method_Binding_Array_Access;
 }}}
 
 
@@ -59,7 +59,7 @@ function Print (P : in Person; Title : in String) return String;
 
 The method binding is created by instantiating the `Func_String` package:
 {{{
-with EL.Beans.Methods.Func_String;
+with EL.Methods.Func_String;
 
 ...
 package Print_Binding is
@@ -78,14 +78,14 @@ return a read-only access to an array of method bindings.  The array can be
 declared as follows:
 
 {{{
-Binding_Array : aliased constant EL.Beans.Methods.Method_Binding_Array
+Binding_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
      := (Print_Binding.Proxy'Access);
 }}}
 
 Then, give access to the method binding array as follows:
 {{{
 function Get_Method_Bindings (From : in Person)
-           return EL.Beans.Methods.Method_Binding_Array_Access is
+           return Util.Beans.Methods.Method_Binding_Array_Access is
 begin
    return Binding_Array'Access;
 end Get_Method_Bindings;
