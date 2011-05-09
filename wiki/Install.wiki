@@ -5,7 +5,7 @@
 You will need:
 
   * [http://gcc.gnu.org Gcc 4.4] or [http://libre.adacore.com/libre/download/ GNAT GPL 2010]
-  * [http://code.google.com/p/ada-util Ada Util 1.1]
+  * [http://code.google.com/p/ada-util Ada Util 1.2]
 
 = Build =
 
@@ -33,4 +33,17 @@ And unit tests are executed with:
 
 {{{
    bin/el_harness
+}}}
+
+The makefile can be used to build and run the tests with:
+{{{
+   make test
+}}}
+
+= Installation =
+
+The installation on Ubuntu or Debian-based system is possible by using
+the *install* target:
+{{{
+   sudo make install
 }}}
