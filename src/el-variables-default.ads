@@ -17,7 +17,7 @@
 -----------------------------------------------------------------------
 
 private with Ada.Strings.Unbounded;
-private with Ada.Containers.Hashed_Maps;
+private with Ada.Containers.Indefinite_Hashed_Maps;
 private with Ada.Strings.Unbounded.Hash;
 package EL.Variables.Default is
 
@@ -27,32 +27,30 @@ package EL.Variables.Default is
    overriding
    procedure Bind (Mapper : in out Default_Variable_Mapper;
                    Name   : in String;
-                   Value  : in EL.Objects.Object);
+                   Value  : access EL.Beans.Readonly_Bean'Class);
 
    overriding
    function Get_Variable (Mapper : Default_Variable_Mapper;
                           Name   : Unbounded_String)
-                          return EL.Expressions.Value_Expression;
+                          return EL.Expressions.ValueExpression;
 
    overriding
    procedure Set_Variable (Mapper : in out Default_Variable_Mapper;
                            Name   : in Unbounded_String;
-                           Value  : in EL.Expressions.Value_Expression);
+                           Value  : in EL.Expressions.ValueExpression);
 
 private
 
-   use type EL.Objects.Object;
-   use type EL.Expressions.Value_Expression;
+   use EL.Beans;
 
    package Variable_Maps is new
-     Ada.Containers.Hashed_Maps (Key_Type      => Unbounded_String,
-                                 Element_Type  => EL.Expressions.Value_Expression,
-                                 Hash          => Ada.Strings.Unbounded.Hash,
-                                 Equivalent_Keys => "=");
+     Ada.Containers.Indefinite_Hashed_Maps (Key_Type => Unbounded_String,
+                                            Element_Type => EL.Beans.Readonly_Bean_Access,
+                                            Hash => Ada.Strings.Unbounded.Hash,
+                                            Equivalent_Keys => "=");
 
    type Default_Variable_Mapper is new VariableMapper with record
-      Next_Mapper : VariableMapper_Access;
-      Map         : Variable_Maps.Map;
+      Map : Variable_Maps.Map;
    end record;
 
 end EL.Variables.Default;

@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  EL.Expressions -- Expression Nodes
---  Copyright (C) 2009, 2010, 2011 Stephane Carrez
+--  Copyright (C) 2009, 2010 Stephane Carrez
 --  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,41 +23,22 @@
 with EL.Functions;
 with Ada.Strings.Wide_Wide_Unbounded;
 with Ada.Strings.Unbounded;
-with Util.Concurrent.Counters;
-private package EL.Expressions.Nodes is
-
-   pragma Preelaborate;
+package EL.Expressions.Nodes is
 
    use EL.Functions;
    use Ada.Strings.Wide_Wide_Unbounded;
    use Ada.Strings.Unbounded;
+   --  type ELNode is abstract tagged private;
 
-   type Reduction;
-
-   type ELNode is abstract tagged limited record
-      Ref_Counter : Util.Concurrent.Counters.Counter;
+   type ELNode is abstract tagged record
+      Ref_Counter : Natural := 1;
    end record;
 
    type ELNode_Access is access all ELNode'Class;
 
-   type Reduction is record
-      Node  : ELNode_Access;
-      Value : EL.Objects.Object;
-   end record;
-
-   --  Evaluate a node on a given context.  If
-   function Get_Safe_Value (Expr    : in ELNode;
-                            Context : in ELContext'Class) return Object;
-
    --  Evaluate a node on a given context.
-   function Get_Value (Expr    : in ELNode;
-                       Context : in ELContext'Class) return Object is abstract;
-
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   function Reduce (Expr    : in ELNode;
-                    Context : in ELContext'Class) return Reduction is abstract;
+   function Get_Value (Expr    : ELNode;
+                       Context : ELContext'Class) return Object is abstract;
 
    --  Delete the expression tree (calls Delete (ELNode_Access) recursively).
    procedure Delete (Node : in out ELNode) is abstract;
@@ -71,21 +52,13 @@ private package EL.Expressions.Nodes is
    --  ------------------------------
    type ELUnary is new ELNode with private;
 
-   type Unary_Node is (EL_VOID, EL_NOT, EL_MINUS, EL_EMPTY);
+   type Unary_Node is (EL_VOID, EL_NOT, EL_MINUS);
 
    --  Evaluate a node on a given context.
    overriding
    function Get_Value (Expr    : ELUnary;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELUnary;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELUnary);
 
    --  ------------------------------
@@ -94,21 +67,13 @@ private package EL.Expressions.Nodes is
    type ELBinary is new ELNode with private;
    type Binary_Node is (EL_EQ, EL_NE, EL_LE, EL_LT, EL_GE, EL_GT,
                         EL_ADD, EL_SUB, EL_MUL, EL_DIV, EL_MOD,
-                        EL_AND, EL_OR, EL_LAND, EL_LOR, EL_CONCAT);
+                        EL_AND, EL_OR, EL_LAND, EL_LOR);
 
    --  Evaluate a node on a given context.
    overriding
    function Get_Value (Expr    : ELBinary;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELBinary;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELBinary);
 
    --  ------------------------------
@@ -121,14 +86,6 @@ private package EL.Expressions.Nodes is
    function Get_Value (Expr    : ELTernary;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELTernary;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELTernary);
 
    --  ------------------------------
@@ -141,51 +98,18 @@ private package EL.Expressions.Nodes is
    function Get_Value (Expr    : ELVariable;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELVariable;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELVariable);
 
    --  ------------------------------
    --  Value property referring to a variable
    --  ------------------------------
    type ELValue is new ELNode with private;
-   type ELValue_Access is access all ELValue'Class;
-
-   --  Check if the target bean is a readonly bean.
-   function Is_Readonly (Node    : in ELValue;
-                         Context : in ELContext'Class) return Boolean;
-
-   --  Evaluate the node and return a method info with
-   --  the bean object and the method binding.
-   function Get_Method_Info (Node    : in ELValue;
-                             Context : in ELContext'Class) return Method_Info;
 
    --  Evaluate a node on a given context.
    overriding
    function Get_Value (Expr    : ELValue;
                        Context : ELContext'Class) return Object;
 
-   --  Evaluate the node and set the value on the associated bean.
-   --  Raises Invalid_Variable if the target object is not a bean.
-   --  Raises Invalid_Expression if the target bean is not writeable.
-   procedure Set_Value (Node    : in ELValue;
-                        Context : in ELContext'Class;
-                        Value   : in Objects.Object);
-
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELValue;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELValue);
 
    --  ------------------------------
@@ -198,14 +122,6 @@ private package EL.Expressions.Nodes is
    function Get_Value (Expr    : ELObject;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELObject;
-                    Context : ELContext'Class) return Reduction;
-
-   overriding
    procedure Delete (Node : in out ELObject);
 
    --  ------------------------------
@@ -218,22 +134,15 @@ private package EL.Expressions.Nodes is
    function Get_Value (Expr    : ELFunction;
                        Context : ELContext'Class) return Object;
 
-   --  Reduce the expression by eliminating variables which are known
-   --  and computing constant expressions.  Returns either a new expression
-   --  tree or a constant value.
-   overriding
-   function Reduce (Expr    : ELFunction;
-                    Context : ELContext'Class) return Reduction;
-
    overriding
    procedure Delete (Node : in out ELFunction);
 
    --  Create constant nodes
-   function Create_Node (Value : Boolean) return ELNode_Access;
-   function Create_Node (Value : Long_Long_Integer) return ELNode_Access;
-   function Create_Node (Value : String) return ELNode_Access;
-   function Create_Node (Value : Wide_Wide_String) return ELNode_Access;
-   function Create_Node (Value : Long_Float) return ELNode_Access;
+   function Create_Node (Value   : Boolean) return ELNode_Access;
+   function Create_Node (Value   : Long_Long_Integer) return ELNode_Access;
+   function Create_Node (Value   : String) return ELNode_Access;
+   function Create_Node (Value   : Wide_Wide_String) return ELNode_Access;
+   function Create_Node (Value   : Long_Float) return ELNode_Access;
    function Create_Node (Value : Unbounded_Wide_Wide_String) return ELNode_Access;
    function Create_Variable (Name : Unbounded_String) return ELNode_Access;
    function Create_Value (Variable : ELNode_Access;

@@ -18,6 +18,5 @@
 
 package EL is
 
-   pragma Pure;
 
 end EL;

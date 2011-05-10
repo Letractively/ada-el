@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  EL.Contexts -- Contexts for evaluating an expression
---  Copyright (C) 2009, 2010, 2011 Stephane Carrez
+--  Copyright (C) 2009, 2010 Stephane Carrez
 --  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +21,11 @@
 --  a resolver whose role is to find variables given their name.
 
 with EL.Objects;
-with Util.Beans.Basic;
+with EL.Beans;
 with Ada.Strings.Unbounded;
-with Ada.Exceptions;
 with EL.Functions;
 limited with EL.Variables;
 package EL.Contexts is
-
-   pragma Preelaborate;
 
    use EL.Objects;
    use Ada.Strings.Unbounded;
@@ -46,22 +43,21 @@ package EL.Contexts is
    --  Get the value associated with a base object and a given property.
    function Get_Value (Resolver : ELResolver;
                        Context  : ELContext'Class;
-                       Base     : access Util.Beans.Basic.Readonly_Bean'Class;
-                       Name     : Unbounded_String) return EL.Objects.Object is abstract;
+                       Base     : access EL.Beans.Readonly_Bean'Class;
+                       Name     : Unbounded_String) return Object is abstract;
 
    --  Set the value associated with a base object and a given property.
    procedure Set_Value (Resolver : in ELResolver;
                         Context  : in ELContext'Class;
-                        Base     : access Util.Beans.Basic.Bean'Class;
+                        Base     : access EL.Beans.Bean'Class;
                         Name     : in Unbounded_String;
-                        Value    : in EL.Objects.Object) is abstract;
+                        Value    : in Object) is abstract;
 
    --  ------------------------------
    --  Expression Context
    --  ------------------------------
    --  Context information for expression evaluation.
-   type ELContext is limited interface;
-   type ELContext_Access is access all ELContext'Class;
+   type ELContext is interface;
 
    --  Retrieves the ELResolver associated with this ELcontext.
    function Get_Resolver (Context : ELContext) return ELResolver_Access is abstract;
@@ -70,24 +66,9 @@ package EL.Contexts is
    function Get_Variable_Mapper (Context : ELContext)
                             return access EL.Variables.VariableMapper'Class is abstract;
 
-   --  Set the variable mapper associated with this ELContext.
-   procedure Set_Variable_Mapper (Context : in out ELContext;
-                                  Mapper  : access EL.Variables.VariableMapper'Class)
-     is abstract;
-
    --  Retrieves the FunctionMapper associated with this ELContext.
    --  The FunctionMapper is only used when parsing an expression.
    function Get_Function_Mapper (Context : ELContext)
                                  return EL.Functions.Function_Mapper_Access is abstract;
-
-   --  Set the function mapper associated with this ELContext.
-   procedure Set_Function_Mapper (Context : in out ELContext;
-                                  Mapper  : access EL.Functions.Function_Mapper'Class)
-     is abstract;
-
-   --  Handle the exception during expression evaluation.  The handler can ignore the
-   --  exception or raise it.
-   procedure Handle_Exception (Context : in ELContext;
-                               Ex      : in Ada.Exceptions.Exception_Occurrence) is abstract;
 
 end EL.Contexts;

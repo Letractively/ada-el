@@ -16,14 +16,12 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with EL.Objects;
-with Util.Beans.Basic;
-with Util.Beans.Methods;
-with Ada.Strings.Unbounded;
+with EL.Beans;
+private with Ada.Strings.Unbounded;
+
 package Bean is
 
-   use Ada.Strings.Unbounded;
-
-   type Person is new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with private;
+   type Person is new EL.Beans.Bean with private;
    type Person_Access is access all Person'Class;
 
    function Create_Person (First_Name, Last_Name : String;
@@ -37,26 +35,14 @@ package Bean is
                         Name  : in String;
                         Value : in EL.Objects.Object);
 
-   --  This bean provides some methods that can be used in a Method_Expression
-   overriding
-   function Get_Method_Bindings (From : in Person)
-                                 return Util.Beans.Methods.Method_Binding_Array_Access;
-
-   --
-   function Save (P : in Person; Name : in Unbounded_String) return Unbounded_String;
-
-   function Print (P : in Person; Title : in String) return String;
-
-   function Compute (B : Util.Beans.Basic.Bean'Class;
-                     P1 : EL.Objects.Object) return EL.Objects.Object;
-
    --  Function to format a string
    function Format (Arg : EL.Objects.Object) return EL.Objects.Object;
 
-   procedure Free (Object : in out Person_Access);
 private
 
-   type Person is new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with record
+   use Ada.Strings.Unbounded;
+
+   type Person is new EL.Beans.Bean with record
       Last_Name  : Unbounded_String;
       First_Name : Unbounded_String;
       Age        : Natural;

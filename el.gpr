@@ -1,13 +1,11 @@
 with "shared";
-with "el";
 
-project Samples is
+project El is
 
-   Mains := ("evaluate.adb", "variables.adb", "functions.adb");
-
-   for Main use Mains;
-
-   for Source_Dirs use ("samples");
+   for Source_Dirs use ("src");
+   for Library_Dir use "lib";
+   for Library_Name use "el";
+   for Library_Kind use "static";
 
    for Object_Dir use "./" & Shared'Object_Dir & "/obj";
    for Exec_Dir use "./" & Shared'Exec_Dir & "/bin";
@@ -36,4 +34,4 @@ project Samples is
 
    package Linker renames Shared.Linker;
 
-end Samples;
+end El;

@@ -16,15 +16,14 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with EL.Objects;
-with Util.Beans.Basic;
+with EL.Beans;
 with Ada.Strings.Unbounded;
 with Ada.Calendar;
-with Ada.Unchecked_Deallocation;
 package Test_Bean is
 
    use Ada.Strings.Unbounded;
 
-   type Person is new Util.Beans.Basic.Bean with record
+   type Person is new EL.Beans.Bean with record
       Last_Name  : Unbounded_String;
       First_Name : Unbounded_String;
       Age        : Natural;
@@ -46,8 +45,5 @@ package Test_Bean is
 
    --  Function to format a string
    function Format (Arg : EL.Objects.Object) return EL.Objects.Object;
-
-   procedure Free is new Ada.Unchecked_Deallocation (Object => Person'Class,
-                                                     Name   => Person_Access);
 
 end Test_Bean;

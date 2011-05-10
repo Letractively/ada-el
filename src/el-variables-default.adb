@@ -15,43 +15,36 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 -----------------------------------------------------------------------
-with EL.Expressions;
+with El.Expressions;
 package body EL.Variables.Default is
 
    overriding
    procedure Bind (Mapper : in out Default_Variable_Mapper;
                    Name   : in String;
-                   Value  : in EL.Objects.Object) is
-      Expr : constant EL.Expressions.Value_Expression
-        := EL.Expressions.Create_ValueExpression (Value);
+                   Value  : access EL.Beans.Readonly_Bean'Class) is
    begin
-      Mapper.Map.Include (Key      => To_Unbounded_String (Name),
-                          New_Item => Expr);
+      Mapper.Map.Include (Key => To_Unbounded_String (Name),
+                          New_Item => Value.all'Access);
    end Bind;
 
    overriding
    function Get_Variable (Mapper : Default_Variable_Mapper;
                           Name   : Unbounded_String)
-                          return EL.Expressions.Value_Expression is
+                          return EL.Expressions.ValueExpression is
       C : constant Variable_Maps.Cursor := Mapper.Map.Find (Name);
    begin
       if not Variable_Maps.Has_Element (C) then
-         if Mapper.Next_Mapper /= null then
-            return Mapper.Next_Mapper.Get_Variable (Name);
-         end if;
-         raise No_Variable
-           with "Variable not found: '" & To_String (Name) & "'";
+         raise No_Variable;
       end if;
-      return Variable_Maps.Element (C);
+      return El.Expressions.Create_ValueExpression (Variable_Maps.Element (C));
    end Get_Variable;
 
    overriding
    procedure Set_Variable (Mapper : in out Default_Variable_Mapper;
                            Name   : in Unbounded_String;
-                           Value  : in EL.Expressions.Value_Expression) is
+                           Value  : in EL.Expressions.ValueExpression) is
    begin
-      Mapper.Map.Include (Key      => Name,
-                          New_Item => Value);
+      null;
    end Set_Variable;
 
 end EL.Variables.Default;

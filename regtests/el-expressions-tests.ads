@@ -24,28 +24,11 @@ package EL.Expressions.Tests is
    procedure Add_Tests (Suite : AUnit.Test_Suites.Access_Test_Suite);
 
    type Test is new AUnit.Test_Fixtures.Test_Fixture with record
-      Context : EL.Contexts.Default.Default_Context_Access;
+      Context : EL.Contexts.Default.Default_Context;
    end record;
-
-   --  Set up performed before each test case
-   procedure Set_Up (T : in out Test);
-
-   --  Tear down performed after each test case
-   procedure Tear_Down (T : in out Test);
 
    procedure Test_Bean_Evaluation (T : in out Test);
    procedure Test_Parse_Error (T : in out Test);
-   procedure Test_Method_Evaluation (T : in out Test);
-   procedure Test_Invalid_Method (T : in out Test);
-   procedure Test_Simple_Evaluation (T : in out Test);
-   procedure Test_Function_Evaluation (T : in out Test);
-   procedure Test_Object_Sizes (T : in out Test);
-
-   --  Test the use of a value expression.
-   procedure Test_Value_Expression (T : in out Test);
-
-   --  Test the invalid value expression
-   procedure Test_Invalid_Value_Expression (T : in out Test);
 
    procedure Check (T      : in out Test;
                     Expr   : in String;

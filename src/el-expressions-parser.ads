@@ -20,16 +20,13 @@
 --  package EL.Expressions
 --  package EL.Objects
 with EL.Expressions.Nodes;
-private package EL.Expressions.Parser is
-
-   pragma Preelaborate;
+package EL.Expressions.Parser is
 
    procedure Parse (Expr    : in String;
                     Context : in ELContext'Class;
                     Result  : out EL.Expressions.Nodes.ELNode_Access);
 
-   procedure Parse (Expr   : in Wide_Wide_String;
-                    Context : in ELContext'Class;
+   procedure Parse (Expr : Wide_Wide_String;
                     Result : out EL.Expressions.Nodes.ELNode_Access);
 
 end EL.Expressions.Parser;

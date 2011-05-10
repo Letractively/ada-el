@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------
---  EL.Variables -- Variable mapper
+--  EL.Contexts -- Contexts for evaluating an expression
 --  Copyright (C) 2009, 2010 Stephane Carrez
 --  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
 --
@@ -21,12 +21,10 @@
 --  information when evaluating an expression.  The context provides
 --  a resolver whose role is to find variables given their name.
 
+with EL.Beans;
 with Ada.Strings.Unbounded;
 with EL.Expressions;
-with EL.Objects;
 package EL.Variables is
-
-   pragma Preelaborate;
 
    use Ada.Strings.Unbounded;
 
@@ -37,14 +35,14 @@ package EL.Variables is
 
    procedure Bind (Mapper : in out VariableMapper;
                    Name   : in String;
-                   Value  : in EL.Objects.Object) is abstract;
+                   Value  : access EL.Beans.Readonly_Bean'Class) is abstract;
 
    function Get_Variable (Mapper : VariableMapper;
                           Name   : Unbounded_String)
-                          return EL.Expressions.Value_Expression is abstract;
+                          return EL.Expressions.ValueExpression is abstract;
 
    procedure Set_Variable (Mapper : in out VariableMapper;
                            Name   : in Unbounded_String;
-                           Value  : in EL.Expressions.Value_Expression) is abstract;
+                           Value  : in EL.Expressions.ValueExpression) is abstract;
 
 end EL.Variables;

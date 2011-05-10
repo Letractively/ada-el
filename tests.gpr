@@ -1,13 +1,16 @@
 with "shared";
-with "el";
+with "aunit";
+with "el.gpr";
 
-project Samples is
+project Tests is
 
-   Mains := ("evaluate.adb", "variables.adb", "functions.adb");
+   for Languages use ("Ada", "Project file");
+
+   Mains := ("el_harness.adb");
+
+   for Source_Dirs use ("regtests");
 
    for Main use Mains;
-
-   for Source_Dirs use ("samples");
 
    for Object_Dir use "./" & Shared'Object_Dir & "/obj";
    for Exec_Dir use "./" & Shared'Exec_Dir & "/bin";
@@ -36,4 +39,4 @@ project Samples is
 
    package Linker renames Shared.Linker;
 
-end Samples;
+end Tests;

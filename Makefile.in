@@ -1,16 +1,11 @@
 # You may edit this makefile as long as you keep these original 
 # target names defined.
-MODE=distrib
-GNATMAKE=gnatmake -XMODE=${MODE} -XPROCESSORS=4
-GNATCLEAN=gnatclean
+GNATMAKE=gnatmake
 GPRPATH=el.gpr
 
 distdir=ada-el-@EL_VERSION@
 
 DIST_FILE=ada-el-@EL_VERSION@.tar.gz
-
-MKDIR=mkdir
-CP=cp
 
 srcdir = .
 top_srcdir = @top_srcdir@
@@ -19,14 +14,6 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 top_builddir = .
 
-includedir=${prefix}/share/ada/adainclude
-projectdir=${prefix}/share/ada/adainclude
-libdir=${prefix}/lib
-alidir=${prefix}/share/ada/adainclude
-
-# Build executables for all mains defined by the project.
-build:
-	$(GNATMAKE) -p -P "$(GPRPATH)"
 
 # Not intended for manual invocation.
 # Invoked if automatic builds are enabled.
@@ -37,31 +24,31 @@ autobuild:
 
 # Clean the root project of all build products.
 clean:
-	$(GNATCLEAN) -q -P "$(GPRPATH)"
+	$(GNATCLEAN) -P "$(GPRPATH)"
 
 # Clean root project and all imported projects too.
 clean_tree:
-	$(GNATCLEAN) -q -P "$(GPRPATH)" -r
+	$(GNATCLEAN) -P "$(GPRPATH)" -r
 
 # Check *all* sources for errors, even those not changed.
 # Does not build executables.
 analyze:
 	$(GNATMAKE) -f  -gnatc -c -k  -P "$(GPRPATH)"
 
+# Build executables for all mains defined by the project.
+build:
+	$(GNATMAKE) -P "$(GPRPATH)"
+
 # Clean, then build executables for all mains defined by the project.
 rebuild: clean build
 
-# Build and run the unit tests
-test:	build
-	$(GNATMAKE) -p -Ptests
-	bin/el_harness
 
 # Files to package in source distribution
-DISTFILES=README LICENSE.txt NOTICE.txt CHANGES ChangeLog config.guess configure config.sub \
+DISTFILES=README LICENSE.txt NOTICE.txt config.guess configure config.sub \
 configure.in Makefile.in install-sh \
-el.gpr.in tests.gpr.in samples.gpr config.gpr \
+el.gpr tests.gpr samples.gpr \
 src samples regtests \
-bin obj lib doc distrib
+bin obj
 
 dist:
 	-rm -rf $(distdir)
@@ -81,22 +68,6 @@ dist:
 	  fi; \
 	done
 	-rm -f $(distdir)/bin/*
-	-rm -f $(distdir)/obj/*
-	-rm -f $(distdir)/lib/*
 	tar --exclude=.svn --exclude="*~" --exclude="*.o" --exclude="*.ali" \
-	    --exclude="*.log" --exclude="*.a" \
+	    --exclude="*.log" \
 	    -cvzf $(DIST_FILE) $(distdir)
-
-install:
-	$(MKDIR) -p ${includedir}/el
-	$(MKDIR) -p ${projectdir}/
-	${MKDIR} -p ${alidir}/el
-	${CP} src/*.ad[bs] ${includedir}/el
-	${CP} distrib/el.gpr ${projectdir}/el.gpr
-	${CP} lib/*.ali ${alidir}/el
-	${CP} lib/libadael.a ${libdir}/
-
-uninstall:
-	rm -rf ${includedir}/el
-	rm -f ${libdir}/libadael.a
-	rm -f ${projectdir}/el.gpr
