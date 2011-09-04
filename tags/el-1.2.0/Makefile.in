@@ -1,0 +1,110 @@
+# You may edit this makefile as long as you keep these original 
+# target names defined.
+MODE=distrib
+GNATMAKE=gnatmake -XMODE=${MODE} -XPROCESSORS=4
+GNATCLEAN=gnatclean
+GPRPATH=el.gpr
+SVN=svn
+
+distdir=ada-el-@EL_VERSION@
+
+DIST_FILE=ada-el-@EL_VERSION@.tar.gz
+
+MKDIR=mkdir
+CP=cp
+
+srcdir = .
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+top_builddir = .
+
+includedir=${prefix}/share/ada/adainclude
+projectdir=${prefix}/share/ada/adainclude
+libdir=${prefix}/lib
+alidir=${prefix}/share/ada/adainclude
+
+# Build executables for all mains defined by the project.
+build:
+	$(GNATMAKE) -p -P "$(GPRPATH)"
+
+# Not intended for manual invocation.
+# Invoked if automatic builds are enabled.
+# Analyzes only on those sources that have changed.
+# Does not build executables.
+autobuild:
+	$(GNATMAKE) -gnatc -c -k  -P "$(GPRPATH)"
+
+# Clean the root project of all build products.
+clean:
+	$(GNATCLEAN) -q -P "$(GPRPATH)"
+
+# Clean root project and all imported projects too.
+clean_tree:
+	$(GNATCLEAN) -q -P "$(GPRPATH)" -r
+
+# Check *all* sources for errors, even those not changed.
+# Does not build executables.
+analyze:
+	$(GNATMAKE) -f  -gnatc -c -k  -P "$(GPRPATH)"
+
+# Clean, then build executables for all mains defined by the project.
+rebuild: clean build
+
+# Build and run the unit tests
+test:	build
+	$(GNATMAKE) -p -Ptests
+	bin/el_harness -xml el-aunit.xml
+
+# Files to package in source distribution
+DISTFILES=README LICENSE.txt NOTICE.txt CHANGES ChangeLog config.guess configure config.sub \
+configure.in Makefile.in install-sh \
+el.gpr.in tests.gpr.in samples.gpr config.gpr \
+src samples regtests \
+bin obj lib doc distrib
+
+dist:
+	-rm -rf $(distdir)
+	mkdir $(distdir)
+	-chmod 777 $(distdir)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+	-rm -f $(distdir)/bin/*
+	-rm -f $(distdir)/obj/*
+	-rm -f $(distdir)/lib/*
+	tar --exclude=.svn --exclude="*~" --exclude="*.o" --exclude="*.ali" \
+	    --exclude="*.log" --exclude="*.a" \
+	    -cvzf $(DIST_FILE) $(distdir)
+
+install:
+	$(MKDIR) -p ${includedir}/el
+	$(MKDIR) -p ${projectdir}/
+	${MKDIR} -p ${alidir}/el
+	${CP} src/*.ad[bs] ${includedir}/el
+	sed -e "s,INSTALL,${prefix},g" < distrib/el.gpr > ${projectdir}/el.gpr
+	${CP} lib/*.ali ${alidir}/el
+	${CP} lib/libadael.a ${libdir}/
+
+uninstall:
+	rm -rf ${includedir}/el
+	rm -f ${libdir}/libadael.a
+	rm -f ${projectdir}/el.gpr
+
+# prepare before releasing a new version of the package
+# (collect information about changes and SVN repository)
+prepare-release:
+	${SVN} update
+	${SVN} info > CHANGES
+	${SVN} log -v > ChangeLog
